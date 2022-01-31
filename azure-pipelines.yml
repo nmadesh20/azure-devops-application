@@ -66,8 +66,11 @@ jobs:
       command: custom
       customCommand: run lint --  --format=stylish
       workingDir: src/angular7
-  - script: |
-      npm run
+  - task: Npm@1
+    inputs:
+      command: 'custom'
+      workingDir: 'src/angular7'
+      customCommand: 'run'
   - task: Npm@1
     displayName: 'E2E Test Angular'
     inputs:
