@@ -6,21 +6,21 @@ jobs:
   - task: DeleteFiles@1
     displayName: 'Delete JUnit files'
     inputs:
-      SourceFolder: src/angular8/junit
+      SourceFolder: src/angular7/junit
       Contents: 'TEST*.xml'
   
   - task: Npm@1
     displayName: 'npm install'
     inputs:
       command: install
-      workingDir: src/angular8
+      workingDir: src/angular7
   
   - task: Npm@1
     displayName: 'Build Angular'
     inputs:
       command: custom
       customCommand: run build -- --prod
-      workingDir: src/angular8
+      workingDir: src/angular7
       
   - script: |
       npm update caniuse-lite browserslist
@@ -28,11 +28,11 @@ jobs:
   - task: PublishPipelineArtifact@0
     inputs:
       artifactName: 'angular'
-      targetPath: 'src/angular8/dist'
+      targetPath: 'src/angular7/dist'
   
   - task: PublishBuildArtifacts@1
     inputs:
-      PathtoPublish: 'src/angular8/dist'
+      PathtoPublish: 'src/angular7/dist'
       ArtifactName: angular2
   
   - task: Npm@1
@@ -40,24 +40,22 @@ jobs:
     inputs:
       command: custom
       customCommand: run test -- --watch=false --code-coverage
-      workingDir: src/angular8
-  - bash: |
-      cd src/angular8
-      ls -lrt
+      workingDir: src/angular7
+ 
   - task: PublishCodeCoverageResults@1
     displayName: 'Publish code coverage Angular results'
     condition: succeededOrFailed()
     inputs:
       codeCoverageTool: Cobertura
-      summaryFileLocation: 'src/angular8/coverage/cobertura-coverage.xml'
-      reportDirectory: src/angular8/coverage
+      summaryFileLocation: 'src/angular7/coverage/cobertura-coverage.xml'
+      reportDirectory: src/angular7/coverage
       failIfCoverageEmpty: true
   
   - task: PublishTestResults@2
     displayName: 'Publish Angular test results'
     condition: succeededOrFailed()
     inputs:
-      searchFolder: $(System.DefaultWorkingDirectory)/src/angular8/junit
+      searchFolder: $(System.DefaultWorkingDirectory)/src/angular7/junit
       testRunTitle: Angular
       testResultsFormat: JUnit
       testResultsFiles: "**/TESTS*.xml"
@@ -67,14 +65,16 @@ jobs:
     inputs:
       command: custom
       customCommand: run lint --  --format=stylish
-      workingDir: src/angular8
+      workingDir: src/angular7
   
   - task: Npm@1
     displayName: 'E2E Test Angular'
     inputs:
       command: custom
-      customCommand: run e2e
-      workingDir: src/angular8
+      customCommand: |
+        run e2e
+        npm update caniuse-lite browserslist
+      workingDir: src/angular7
   
   - task: PublishTestResults@2
     displayName: 'Publish Angular E2E test results'
