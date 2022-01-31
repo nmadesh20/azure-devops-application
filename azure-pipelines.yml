@@ -21,7 +21,10 @@ jobs:
       command: custom
       customCommand: run build -- --prod
       workingDir: src/angular7
-  
+      
+  - script: |
+      npm update caniuse-lite browserslist
+
   - task: PublishPipelineArtifact@0
     inputs:
       artifactName: 'angular'
