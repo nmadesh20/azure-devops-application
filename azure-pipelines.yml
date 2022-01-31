@@ -13,14 +13,14 @@ jobs:
     displayName: 'npm install'
     inputs:
       command: install
-      workingDir: src/angular8
+      workingDir: src/angular7
   
   - task: Npm@1
     displayName: 'Build Angular'
     inputs:
       command: custom
       customCommand: run build -- --prod
-      workingDir: src/angular8
+      workingDir: src/angular7
       
   - script: |
       npm update caniuse-lite browserslist
@@ -28,11 +28,11 @@ jobs:
   - task: PublishPipelineArtifact@0
     inputs:
       artifactName: 'angular'
-      targetPath: 'src/angular8/dist'
+      targetPath: 'src/angular7/dist'
   
   - task: PublishBuildArtifacts@1
     inputs:
-      PathtoPublish: 'src/angular8/dist'
+      PathtoPublish: 'src/angular7/dist'
       ArtifactName: angular2
   
   - task: Npm@1
@@ -40,8 +40,10 @@ jobs:
     inputs:
       command: custom
       customCommand: run test -- --watch=false --code-coverage
-      workingDir: src/angular8
-  
+      workingDir: src/angular7
+  - bash: |
+      cd src/angular7
+      ls -lrt
   - task: PublishCodeCoverageResults@1
     displayName: 'Publish code coverage Angular results'
     condition: succeededOrFailed()
